@@ -1,29 +1,26 @@
-[gd_scene load_steps=6 format=3 uid="uid://b0uhqfrvrnyyn"]
+[gd_scene load_steps=4 format=3 uid="uid://b0uhqfrvrnyyn"]
 
-[ext_resource type="Texture2D" uid="uid://40uttoluykgr" path="res://environment/textures/PNG/Red/texture_03.png" id="1_1af4f"]
 [ext_resource type="Script" path="res://player/player.gd" id="1_vdpfq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_csc3h"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3xdi"]
-albedo_texture = ExtResource("1_1af4f")
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0dk5u"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_y5t6e"]
-material = SubResource("StandardMaterial3D_q3xdi")
-radius = 0.4
-height = 1.5
-
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("CAMERA_CONTROLLER")]
+[node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_vdpfq")
-CAMERA_CONTROLLER = NodePath("CameraController/Camera3D")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="Collider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_csc3h")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
-mesh = SubResource("CapsuleMesh_y5t6e")
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_0dk5u")
 
-[node name="CameraController" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Camera3D" type="Camera3D" parent="CameraController"]
+[node name="Camera" type="Camera3D" parent="Head"]
+cull_mask = 1048573
+
+[node name="GunRay" type="RayCast3D" parent="Head/Camera"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+target_position = Vector3(60, -1, 0)

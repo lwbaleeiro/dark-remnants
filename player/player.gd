@@ -1,75 +1,53 @@
 class_name Player extends CharacterBody3D
 
-@export var CAMERA_CONTROLLER : Camera3D
-@export var TILT_LOWER_LIMIT := deg_to_rad(-90.0)
-@export var TILT_UPPER_LIMIT := deg_to_rad(90.0)
-@export var MOUSE_SENSITIVITY : float = 0.5
-
 @export var SPEED : float = 5.0
-@export var ACCELERATION : float = 0.1
-@export var DECELERATION : float = 0.25
+@export var JUMP_VELOCITY : float = 4.5
 
-# Camera & Movement
-var _rotation_input : float
-var _tilt_input : float
-var _mouse_input : bool = false
-var _mouse_rotation : Vector3
-var _player_rotation : Vector3
-var _camera_rotation : Vector3
-var _current_rotation : float
+var _mouse_sensibility = 1200
+var _mouse_relative_x = 0
+var _mouse_relative_y = 0
+var _gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+@onready var camera: Camera3D = $Head/Camera
+@onready var gun_ray: RayCast3D = $Head/Camera/GunRay
 
 func _ready() -> void:
+	gun_ray.add_exception(self)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta: float) -> void:
-	_update_gravity(delta)
-	_update_input(SPEED, ACCELERATION, DECELERATION)
-	_update_velocity()
-	_update_camera(delta)
+	
+	if not is_on_floor():
+		velocity.y -= _gravity * delta
+		
+	_handle_input()
 
-func _unhandled_input(event: InputEvent) -> void:
-	_mouse_input = event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED
-	if _mouse_input:
-		_rotation_input = -event.relative.x * MOUSE_SENSITIVITY
-		_tilt_input = -event.relative.y * MOUSE_SENSITIVITY
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("exit"):
+func _handle_input() -> void:
+	
+	if Input.is_action_just_pressed("exit"):
 		get_tree().quit()
-
-func _update_camera(delta) -> void:
 	
-	_current_rotation = _rotation_input
-	_mouse_rotation.x += _tilt_input * delta
-	_mouse_rotation.x = clamp(_mouse_rotation.x, TILT_LOWER_LIMIT, TILT_UPPER_LIMIT)
-	_mouse_rotation.y += _rotation_input * delta
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 	
-	_player_rotation = Vector3(0.0, _mouse_rotation.y, 0.0)
-	_camera_rotation = Vector3(_mouse_rotation.x, 0.0, 0.0)
-	
-	CAMERA_CONTROLLER.transform.basis = Basis.from_euler(_camera_rotation)
-	global_transform.basis = Basis.from_euler(_player_rotation)
-	
-	CAMERA_CONTROLLER.rotation.z = 0.0
-	_rotation_input = 0.0
-	_tilt_input = 0.0
-
-func _update_input(speed : float, acceleration : float, deceleration : float) -> void:
-	
-	var _input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	var direction = (transform.basis * Vector3(_input_dir.x, 0.0, _input_dir.y)).normalized()
+	var input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	var direction = (transform.basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	
 	if direction:
-		velocity.x = lerp(velocity.x, direction.x * speed, acceleration)
-		velocity.z = lerp(velocity.z, direction.z * speed, acceleration)
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
 	else:
-		velocity.x = move_toward(velocity.x, 0, deceleration)
-		velocity.z = move_toward(velocity.z, 0, deceleration)
-
-func _update_gravity(delta) -> void:
-	velocity.y -= gravity * delta
-
-func _update_velocity() -> void:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+	
 	move_and_slide()
+
+func _input(event: InputEvent) -> void:
+	
+	if event is InputEventMouseMotion:
+		rotation.y -= event.relative.x / _mouse_sensibility
+		camera.rotation.x -= event.relative.y / _mouse_sensibility
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+		
+		_mouse_relative_x = clamp(event.relative.x, -50, 50)
+		_mouse_relative_y = clamp(event.relative.y, -50, 10)

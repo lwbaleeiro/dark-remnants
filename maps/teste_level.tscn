@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cjpfrfu8w1x12"]
+[gd_scene load_steps=11 format=3 uid="uid://cjpfrfu8w1x12"]
 
-[ext_resource type="PackedScene" uid="uid://dvo5f4xxxwmac" path="res://environment/world_environment.tscn" id="1_605ip"]
-[ext_resource type="Texture2D" uid="uid://cplxlqxngntr" path="res://environment/textures/PNG/Dark/texture_03.png" id="2_ah81i"]
+[ext_resource type="PackedScene" uid="uid://dvo5f4xxxwmac" path="res://maps/world_environment.tscn" id="1_605ip"]
+[ext_resource type="Texture2D" uid="uid://cplxlqxngntr" path="res://maps/textures/PNG/Dark/texture_03.png" id="2_ah81i"]
 [ext_resource type="PackedScene" uid="uid://b0uhqfrvrnyyn" path="res://player/player.tscn" id="3_557xp"]
+[ext_resource type="Texture2D" uid="uid://gd6f4tdjlf2x" path="res://maps/textures/PNG/Green/texture_01.png" id="4_537yd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_awgdi"]
 size = Vector3(50, 0.5, 50)
@@ -17,6 +18,16 @@ uv2_world_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cq012"]
 size = Vector3(50, 1, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_red8y"]
+albedo_texture = ExtResource("4_537yd")
+
+[sub_resource type="BoxMesh" id="BoxMesh_b43uf"]
+material = SubResource("StandardMaterial3D_red8y")
+size = Vector3(3, 3, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mio22"]
+size = Vector3(3, 3, 3)
 
 [node name="Level" type="Node3D"]
 
@@ -33,3 +44,12 @@ shape = SubResource("BoxShape3D_cq012")
 
 [node name="Player" parent="." instance=ExtResource("3_557xp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.10172, 0)
+
+[node name="Box" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85071, 14.7078)
+mesh = SubResource("BoxMesh_b43uf")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Box"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box/StaticBody3D"]
+shape = SubResource("BoxShape3D_mio22")
