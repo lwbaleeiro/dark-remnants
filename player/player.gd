@@ -1,7 +1,11 @@
 class_name Player extends CharacterBody3D
 
+@export_category("Movement")
 @export var SPEED : float = 5.0
 @export var JUMP_VELOCITY : float = 4.5
+@export_category("Weapons")
+@export var wepon : Array = [ArrayMesh]
+
 
 var _mouse_sensibility = 1200
 var _mouse_relative_x = 0
@@ -12,6 +16,7 @@ var _gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var gun_ray: RayCast3D = $Head/Camera/GunRay
 
 func _ready() -> void:
+	
 	gun_ray.add_exception(self)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://4b1jkliwqr8d"]
+
+[ext_resource type="Script" path="res://weapons/base_weapon.gd" id="1_ekoy7"]
+
+[node name="BaseWeapon" type="Node3D"]
+script = ExtResource("1_ekoy7")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
