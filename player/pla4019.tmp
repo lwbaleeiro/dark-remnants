@@ -1,0 +1,97 @@
+[gd_scene load_steps=9 format=3 uid="uid://b0uhqfrvrnyyn"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_vdpfq"]
+[ext_resource type="Script" path="res://player/reticle.gd" id="2_20sob"]
+[ext_resource type="Script" path="res://weapons/weapon.gd" id="2_lyor6"]
+[ext_resource type="Resource" uid="uid://y3y27h7flrii" path="res://weapons/revolver/revolver.tres" id="3_0jidu"]
+[ext_resource type="Script" path="res://player/sub_viewport.gd" id="4_unx0j"]
+[ext_resource type="Script" path="res://player/weapon_camera.gd" id="5_ve2y3"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_csc3h"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0dk5u"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_vdpfq")
+SPEED = null
+JUMP_VELOCITY = null
+weapons = Array[ExtResource("2_lyor6")]([ExtResource("3_0jidu")])
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_csc3h")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_0dk5u")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Camera" type="Camera3D" parent="Head"]
+cull_mask = 1048573
+
+[node name="GunRay" type="RayCast3D" parent="Head/Camera"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+target_position = Vector3(60, -1, 0)
+
+[node name="WeaponRig" type="Node3D" parent="Head/Camera"]
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Reticle" type="CenterContainer" parent="UserInterface" node_paths=PackedStringArray("reticle_lines", "player_controller")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_20sob")
+reticle_lines = [NodePath("Top"), NodePath("Right"), NodePath("Bottom"), NodePath("Left")]
+player_controller = NodePath("../..")
+
+[node name="Top" type="Line2D" parent="UserInterface/Reticle"]
+points = PackedVector2Array(0, -5, 0, -15)
+width = 2.0
+
+[node name="Right" type="Line2D" parent="UserInterface/Reticle"]
+points = PackedVector2Array(5, 0, 15, 0)
+width = 2.0
+
+[node name="Bottom" type="Line2D" parent="UserInterface/Reticle"]
+points = PackedVector2Array(0, 5, 0, 15)
+width = 2.0
+
+[node name="Left" type="Line2D" parent="UserInterface/Reticle"]
+points = PackedVector2Array(-5, 0, -15, 0)
+width = 2.0
+
+[node name="WeaponViewport" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WeaponSubviewport" type="SubViewport" parent="WeaponViewport"]
+transparent_bg = true
+handle_input_locally = false
+canvas_cull_mask = 4294966274
+render_target_update_mode = 4
+script = ExtResource("4_unx0j")
+
+[node name="WeaponCamera" type="Camera3D" parent="WeaponViewport/WeaponSubviewport" node_paths=PackedStringArray("main_camera")]
+cull_mask = 1048574
+script = ExtResource("5_ve2y3")
+main_camera = NodePath("../../../Head/Camera")

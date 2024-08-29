@@ -17,6 +17,7 @@ func _draw() -> void:
 	draw_circle(Vector2(0,0), dot_radius, dot_color)
 
 func adjuste_reticle_lines():
+	
 	var velocity = player_controller.get_real_velocity()
 	var origin = Vector3(0,0,0)
 	var pos = Vector2(0,0)

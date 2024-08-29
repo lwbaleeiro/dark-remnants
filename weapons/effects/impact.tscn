@@ -49,6 +49,7 @@ double_sided = false
 no_depth_test = true
 sprite_frames = SubResource("SpriteFrames_nwydm")
 animation = &"shot"
+autoplay = "shot"
 frame = 4
 frame_progress = 1.0
 script = ExtResource("1_dpy5n")
