@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6pvdienvn5ln"]
+[gd_scene load_steps=8 format=3 uid="uid://b6pvdienvn5ln"]
 
+[ext_resource type="Script" path="res://enemys/teste_enemy.gd" id="1_kornv"]
 [ext_resource type="Texture2D" uid="uid://blxd5e2jfesbv" path="res://maps/textures/PNG/Red/texture_08.png" id="1_s3e76"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7e8t5"]
@@ -10,10 +11,32 @@ albedo_texture = ExtResource("1_s3e76")
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_yrhsv"]
 material = SubResource("StandardMaterial3D_tvjsp")
 
+[sub_resource type="SphereMesh" id="SphereMesh_8u243"]
+radius = 0.1
+height = 0.3
+
+[sub_resource type="SphereMesh" id="SphereMesh_l5lhd"]
+radius = 0.1
+height = 0.3
+
 [node name="TesteEnemy" type="CharacterBody3D"]
+script = ExtResource("1_kornv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_7e8t5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_yrhsv")
+
+[node name="zoi1" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.401303, 0.451552, 0.245762)
+mesh = SubResource("SphereMesh_8u243")
+skeleton = NodePath("../..")
+
+[node name="zoi2" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.377626, 0.446509, -0.255162)
+mesh = SubResource("SphereMesh_l5lhd")
+skeleton = NodePath("../..")
+
+[node name="NavAgent" type="NavigationAgent3D" parent="."]

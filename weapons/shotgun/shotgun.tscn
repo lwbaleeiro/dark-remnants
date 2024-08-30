@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3po5jncjqk8i"]
+
+[ext_resource type="ArrayMesh" uid="uid://bt3f32i5lhw2e" path="res://weapons/shotgun/shotgun.obj" id="1_ai1h7"]
+
+[node name="Shotgun" type="Node3D"]
+
+[node name="WeaponMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-3.0598e-08, 1.21431e-18, 0.7, -0.000207694, 0.7, -9.0786e-12, -0.7, -0.000207694, -3.0598e-08, 0.5, -0.701761, -1)
+layers = 3
+mesh = ExtResource("1_ai1h7")

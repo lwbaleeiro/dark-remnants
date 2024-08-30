@@ -40,6 +40,10 @@ func _handle_input() -> void:
 	
 	if Input.is_action_just_pressed("exit"):
 		get_tree().quit()
+		
+	if Input.is_action_just_pressed("change_weapon"):
+		_base_weapon_index += 1
+		load_weapon()
 	
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -80,7 +84,6 @@ func attack() -> void:
 			ray_cast.target_position.y = randf_range(-_base_weapon.spread, _base_weapon.spread)
 		
 			ray_cast.force_raycast_update()
-			print(ray_cast.is_colliding())
 			if !ray_cast.is_colliding(): continue
 			
 			var collider = ray_cast.get_collider()
